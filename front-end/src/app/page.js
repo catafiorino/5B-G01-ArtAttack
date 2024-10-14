@@ -1,29 +1,57 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const GameRoom = () => {
   const [gameCode, setGameCode] = useState('');
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
   const [gameCode2, setGameCode2] = useState('');
-  const validCodes = ['ABC123', 'DEF456']; 
+  const [validCodes, setValidCodes] = useState([]); 
 
-  const handleJoinGame = (event) => {
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/entrarSala');
+        const data = await response.json();
+        const codes = data.map(room => room.codigo);
+        setValidCodes(codes);
+      } catch (err) {
+        console.error('Error fetching rooms:', err);
+      }
+    };
+    fetchRooms();
+  }, []);
+
+  const handleJoinGame = async (event) => {
     event.preventDefault();
     if (validCodes.includes(gameCode)) {
       console.log('Unido a la sala con código:', gameCode);
       setError('');
     } else {
-      setMessage('');
+      setError('Código del juego no válido.');
     }
   };
 
-  const handleCreateGame = (event) => {
+  const handleCreateGame = async (event) => {
     event.preventDefault();
     if (gameCode2) {
-      console.log('Juego creado');
-      setGameCode2('');
-      setError('');
+      try {
+        const response = await fetch('http://localhost:4000/crearSala', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ codigo: gameCode2, cantidad_personas: 4 }), 
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al crear la sala');
+        }
+        setGameCode2('');
+        setError('');
+      } catch (err) {
+        setError('Error al crear la sala.');
+        console.error('Error:', err);
+      }
     } else {
       setError('Por favor, ingrese un nombre y un código para el juego.');
     }
@@ -63,7 +91,7 @@ const GameRoom = () => {
         />
         <button type="submit">Crear Juego</button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {message && <p style={{ color: 'green' }}>{message}</p>}
+      
       </form>
     </div>
   );

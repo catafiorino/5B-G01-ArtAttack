@@ -1,50 +1,100 @@
 "use client";
-import { useState } from "react";
-import Button from "./components/button";
-import Link from "next/link";
+import React, { useState, useEffect } from 'react';
 
-export default function Home() {
-  const [number, setNumber] = useState(0)
+const GameRoom = () => {
+  const [gameCode, setGameCode] = useState('');
+  const [error, setError] = useState('');
+  const [gameCode2, setGameCode2] = useState('');
+  const [validCodes, setValidCodes] = useState([]); 
 
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/entrarSala');
+        const data = await response.json();
+        const codes = data.map(room => room.codigo);
+        setValidCodes(codes);
+      } catch (err) {
+        console.error('Error fetching rooms:', err);
+      }
+    };
+    fetchRooms();
+  }, []);
 
-  async function traerNumeros() {
-    const data = {
-      number: number
+  const handleJoinGame = async (event) => {
+    event.preventDefault();
+    if (validCodes.includes(gameCode)) {
+      console.log('Unido a la sala con código:', gameCode);
+      setError('');
+    } else {
+      setError('Código del juego no válido.');
     }
-    console.log({data})
-    const response = await fetch('http://localhost:4000/cualquierCosa', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    });
+  };
 
-    return response.json()
-  }
+  const handleCreateGame = async (event) => {
+    event.preventDefault();
+    if (gameCode2) {
+      try {
+        const response = await fetch('http://localhost:4000/crearSala', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ codigo: gameCode2, cantidad_personas: 4 }), 
+        });
 
-  async function chats() {
-
-    var response = await traerNumeros();
-    
-    if (response != 0) {
-       let num = response.data
-      console.log(num)
-       localStorage.setItem("num", `${num}`)
-      return location.href = '/chats'
+        if (!response.ok) {
+          throw new Error('Error al crear la sala');
+        }
+        setGameCode2('');
+        setError('');
+      } catch (err) {
+        setError('Error al crear la sala.');
+        console.error('Error:', err);
+      }
+    } else {
+      setError('Por favor, ingrese un nombre y un código para el juego.');
     }
-    else {
-      alert("no existe")
-    }}
+  };
 
-    return (
-      <div>
-        <form>
-          <label>Ingrese su número de teléfono:</label>
-          <input type="number" onChange={(event) => setNumber(event.target.value)} />
-          <Button text="Iniciar sesión" onClick={chats} />
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h2>Unirse a un Juego</h2>
+      <form onSubmit={handleJoinGame}>
+        <label htmlFor="gameCode">Código del Juego</label>
+        <input
+          type="text"
+          id="gameCode"
+          value={gameCode}
+          onChange={(e) => {
+            setGameCode(e.target.value);
+            setError('');
+          }}
+          required
+        />
+        <button type="submit">Unirse</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </form>
+
+      <h2>Crear un Juego</h2>
+      <form onSubmit={handleCreateGame}>
+        <label htmlFor="newGameCode">Código del Juego</label>
+        <input
+          type="text"
+          id="newGameCode"
+          value={gameCode2}
+          onChange={(e) => {
+            setGameCode2(e.target.value);
+            setError('');
+          }}
+          required
+        />
+        <button type="submit">Crear Juego</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      
+      </form>
+    </div>
+  );
+};
+
+export default GameRoom;

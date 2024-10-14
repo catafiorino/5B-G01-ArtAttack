@@ -36,9 +36,9 @@ io.use((socket, next) => {
 });
 
 // Obtener contactos
-app.get('/contactos', async (req, res) => {
+app.get('/entrarSala', async (req, res) => {
 	try {
-		const results = await db.query('SELECT * FROM users');
+		const results = await db.query('SELECT * FROM salas');
 		res.json(results);
 	} catch (err) {
 		res.status(500).send(err);
@@ -46,16 +46,13 @@ app.get('/contactos', async (req, res) => {
 });
 
 
-app.get('/getChats', async (req, res) => {
+app.post('/crearSala', async (req, res) => {
+	const { codigo, cantidad_personas } = req.body;
 	try {
 		const results = await db.query(
-			`SELECT chats.id, chat_name, is_group, created_at, phone_number, profile_pic, messages.message_text 
-			FROM chats
-			INNER JOIN users ON chats.chat_name = users.username
-			INNER JOIN messages ON messages.chat_id = chats.id
-			ORDER BY messages.timestamp DESC;` 
+			`INSERT INTO salas (codigo, cantidad_personas) 
+		 	VALUES ($1, $2)`, [codigo, cantidad_personas]
 		);
-		res.json(results);
 	} catch (err) {
 		res.status(500).send(err);
 	}

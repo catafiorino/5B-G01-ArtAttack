@@ -35,96 +35,59 @@ io.use((socket, next) => {
 	sessionMiddleware(socket.request, {}, next);
 });
 
-// Obtener contactos
-app.get('/contactos', async (req, res) => {
-	try {
-		const results = await db.query('SELECT * FROM users');
-		res.json(results);
-	} catch (err) {
-		res.status(500).send(err);
-	}
-});
-
-
-app.get('/getChats', async (req, res) => {
-	try {
-		const results = await db.query(
-			`SELECT chats.id, chat_name, is_group, created_at, phone_number, profile_pic, messages.message_text 
-			FROM chats
-			INNER JOIN users ON chats.chat_name = users.username
-			INNER JOIN messages ON messages.chat_id = chats.id
-			ORDER BY messages.timestamp DESC;` 
-		);
-		res.json(results);
-	} catch (err) {
-		res.status(500).send(err);
-	}
-});
-
-
-app.post('/sendMessage', async (req, res) => {
-	const { chatId, message, sender } = req.body;
+app.post('/crear-sala', (req, res) => {
+	const { nombre } = req.body;
+	const query = 'INSERT INTO salas (nombre) VALUES (?)';
   
-	try {
-	  await pool.query(
-		`INSERT INTO messages (chat_id, message_text, sender, timestamp) 
-		 VALUES ($1, $2, $3, NOW())`,
-		[chatId, message, sender]
-	  );
-	  await pool.query(
-		`UPDATE chats SET message_text = $1 WHERE id = $2`,
-		[message, chatId]
-	  );
-	  res.status(201).send('Mensaje enviado');
-	} catch (error) {
-	  res.status(500).send(error);
-	}
-  });
-
-  
-// Obtener mensajes
-app.get('/chats', (req, res) => {
-	const { chatId } = req.params;
-	db.query('SELECT * FROM messages WHERE chat_id = ?', [chatId], (err, results) => {
-		if (err) return res.status(500).send(err);
-		res.json(results);
-	});
-});
-
-app.get('/chats/:chatId', (req, res) => {
-	const { chatId } = req.params;
-	db.query('SELECT * FROM messages WHERE chat_id = ?', [chatId], (err, results) => {
-	  if (err) return res.status(500).send(err);
-	  res.json(results);  
-	});
-  });
-
-// Enviar un nuevo mensaje
-app.post('/chats', (req, res) => {
-	const { chatId, sender, text } = req.body;
-	db.query(
-	  'INSERT INTO messages (chat_id, sender, text) VALUES (?, ?, ?)',
-	  [chatId, sender, text],
-	  (err, results) => {
-		if (err) {
-		  return res.status(500).send(err);
-		}
-		res.status(201).json({ id: results.insertId, chatId, sender, text });
+	db.query(query, [nombre], (err, result) => {
+	  if (err) {
+		console.error('Error al crear sala:', err);
+		return res.status(500).send('Error al crear la sala');
 	  }
-	);
+	  res.status(201).json({ id: result.insertId, nombre });
+	});
   });
+  
+  app.post('/unirse-sala', (req, res) => {
+	const { usuario_nombre, sala_id } = req.body;
+	const query = 'INSERT INTO usuarios_salas (usuario_nombre, sala_id) VALUES (?, ?)';
+  
+	db.query(query, [usuario_nombre, sala_id], (err, result) => {
+	  if (err) {
+		console.error('Error al unirse a la sala:', err);
+		return res.status(500).send('Error al unirse a la sala');
+	  }
+	  res.status(200).json({ usuario_nombre, sala_id });
+	});
+  });
+  
 
-app.post('/cualquierCosa', async (req, res) => {
-    const phoneNumber = req.body.number;
-
-    try {
-        const results = await db.query(`SELECT phone_number FROM users WHERE phone_number = ${phoneNumber}`);
-        const exists = results.length > 0; 
-        res.send(results);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+  io.on('connection', (socket) => {
+	console.log('Un usuario se ha conectado:', socket.id);
+  
+	socket.on('joinRoom', (roomId, username) => {
+	  console.log(`${username} se unió a la sala ${roomId}`);
+	  socket.join(roomId);  
+  
+	  socket.to(roomId).emit('message', `${username} se ha unido a la sala.`);
+	});
+  
+	socket.on('sendMessage', (roomId, message, username) => {
+	  console.log(`Mensaje de ${username} en la sala ${roomId}: ${message}`);
+	  io.to(roomId).emit('message', `${username}: ${message}`);
+	});
+  
+	socket.on('disconnect', () => {
+	  console.log('Un usuario se ha desconectado:', socket.id);
+	});
+  });
+  
+  
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+	console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  });
+  
 
 app.get('/', (req, res) => {
 	console.log(`[REQUEST - ${req.method}] ${req.url}`);

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import styles from './page.module.css'; // Importamos el CSS con los estilos
 
 const GameRoom = () => {
   const [gameCode, setGameCode] = useState('');
@@ -72,10 +73,10 @@ const GameRoom = () => {
   };
 
   return (
-    <div>
-      <h2>Unirse a un Juego</h2>
-      <form onSubmit={handleJoinGame}>
-        <label htmlFor="gameCode">Código del Juego</label>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Unirse a un Juego</h2>
+      <form onSubmit={handleJoinGame} className={styles.form}>
+        <label htmlFor="gameCode" className={styles.label}>Código del Juego</label>
         <input
           type="text"
           id="gameCode"
@@ -85,18 +86,18 @@ const GameRoom = () => {
             setError('');
           }}
           required
+          className={styles.input}
         />
-        <button type="submit">Unirse</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit" className={styles.button}>Unirse</button>
+        {error && <p className={styles.error}>{error}</p>}
       </form>
 
-      <h2>Crear un Juego</h2>
-      <button onClick={() => document.getElementById('createGameModal').showModal()}>Abrir Modal para Crear Juego</button>
+      <h2 className={styles.title}>Crear un Juego</h2>
+      <button className={styles.button} onClick={() => document.getElementById('createGameModal').showModal()}>Crear Juego</button>
 
-      <dialog id="createGameModal">
-        <h3>Crear Juego</h3>
-        <form onSubmit={handleCreateGame}>
-          <label htmlFor="newGameCode">Código del Juego</label>
+      <dialog id="createGameModal" className={styles.modal}>
+        <form onSubmit={handleCreateGame} className={styles.dialogForm}>
+          <label htmlFor="newGameCode" className={styles.label}>Código del Juego</label>
           <input
             type="text"
             id="newGameCode"
@@ -106,8 +107,9 @@ const GameRoom = () => {
               setError('');
             }}
             required
+            className={styles.input}
           />
-          <label htmlFor="maxPlayers">Máx. Jugadores</label>
+          <label htmlFor="maxPlayers" className={styles.label}>Máx. Jugadores</label>
           <input
             type="number"
             id="maxPlayers"
@@ -117,11 +119,15 @@ const GameRoom = () => {
               setError('');
             }}
             required
+            className={styles.input}
           />
-          <button type="submit">Crear Juego</button>
-          <button type="button" onClick={() => document.getElementById('createGameModal').close()}>Cancelar</button>
+
+          <div className={styles.dialogButtonsContainer}>
+            <button type="submit" className={styles.dialogButton}>Crear Juego</button>
+            <button type="button" className={styles.dialogButton} onClick={() => document.getElementById('createGameModal').close()}>Cancelar</button>
+          </div>
         </form>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
       </dialog>
     </div>
   );

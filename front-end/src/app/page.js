@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import styles from './page.module.css'; // Importamos el CSS con los estilos
+import styles from './page.module.css'; 
 
 const GameRoom = () => {
   const [gameCode, setGameCode] = useState('');
   const [error, setError] = useState('');
   const [validCodes, setValidCodes] = useState([]);
-  const [newGameCode, setNewGameCode] = useState('');
   const [maxPlayers, setMaxPlayers] = useState('');
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const GameRoom = () => {
   const handleCreateGame = async (event) => {
     event.preventDefault();
 
-    if (validCodes.includes(newGameCode)) {
+    if (validCodes.includes(gameCode)) {
       setError('El código de la sala ya existe. Por favor, elige otro.');
       return;
     }
@@ -46,20 +45,20 @@ const GameRoom = () => {
       return;
     }
 
-    if (newGameCode && maxPlayers) {
+    if (gameCode && maxPlayers) {
       try {
         const response = await fetch('http://localhost:4000/crearSala', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ codigo: newGameCode, cantidad_personas: parseInt(maxPlayers) }),
+          body: JSON.stringify({ codigo: gameCode, cantidad_personas: parseInt(maxPlayers) }),
         });
 
         if (!response.ok) {
           throw new Error('Error al crear la sala');
         }
-        setNewGameCode('');
+        setGameCode('');
         setMaxPlayers('');
         document.getElementById('createGameModal').close(); 
         setError('');
@@ -74,8 +73,9 @@ const GameRoom = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Unirse a un Juego</h2>
-      <form onSubmit={handleJoinGame} className={styles.form}>
+      <h2 className={styles.title}>ArtAttack</h2>
+      <div className={styles.form}>
+      <form onSubmit={handleJoinGame} >
         <label htmlFor="gameCode" className={styles.label}>Código del Juego</label>
         <input
           type="text"
@@ -91,19 +91,17 @@ const GameRoom = () => {
         <button type="submit" className={styles.button}>Unirse</button>
         {error && <p className={styles.error}>{error}</p>}
       </form>
-
-      <h2 className={styles.title}>Crear un Juego</h2>
       <button className={styles.button} onClick={() => document.getElementById('createGameModal').showModal()}>Crear Juego</button>
-
+      </div>
       <dialog id="createGameModal" className={styles.modal}>
-        <form onSubmit={handleCreateGame} className={styles.dialogForm}>
-          <label htmlFor="newGameCode" className={styles.label}>Código del Juego</label>
+        <form onSubmit={handleCreateGame} >
+          <label htmlFor="gameCode" className={styles.label}>Código del Juego</label>
           <input
             type="text"
             id="newGameCode"
-            value={newGameCode}
+            value={gameCode}
             onChange={(e) => {
-              setNewGameCode(e.target.value);
+              setGameCode(e.target.value);
               setError('');
             }}
             required

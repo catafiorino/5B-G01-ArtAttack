@@ -1,4 +1,3 @@
-/* Contenedor principal */
 .container {
   font-family: 'Arial', sans-serif;
   background-color: #f7f8fc;
@@ -11,7 +10,6 @@
   justify-content: center;
 }
 
-/* Títulos */
 .title {
   font-size: 24px;
   color: #3a3a3a;
@@ -19,7 +17,6 @@
   text-align: center;
 }
 
-/* Estilos del formulario */
 .form {
   display: flex;
   flex-direction: column;
@@ -32,21 +29,22 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Etiquetas */
 .label {
   font-weight: bold;
   color: #555;
   margin-bottom: 5px;
 }
 
-/* Campos de entrada */
 .input {
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #4a90e2;
   border-radius: 8px;
   font-size: 16px;
   width: 100%;
   transition: border-color 0.3s ease;
+  margin-bottom: 15px;
+  color: #333; 
+  background-color: #fff; 
 }
 
 .input:focus {
@@ -54,8 +52,8 @@
   outline: none;
 }
 
-/* Botones */
 .button {
+  width: 100%;
   padding: 12px;
   background-color: #4a90e2;
   color: white;
@@ -71,7 +69,6 @@
   background-color: #357ab8;
 }
 
-/* Botón dentro del modal */
 .dialogButton {
   padding: 12px;
   background-color: #4a90e2;
@@ -88,7 +85,6 @@
   background-color: #357ab8;
 }
 
-/* Estilos de error */
 .error {
   color: red;
   font-size: 14px;
@@ -96,7 +92,6 @@
   margin-top: 10px;
 }
 
-/* Estilos del modal */
 .modal {
   max-width: 400px;
   margin: 0 auto;
@@ -105,6 +100,10 @@
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
   padding: 25px;
   background-color: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-85%, -40%);
 }
 
 .modal::backdrop {

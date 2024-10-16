@@ -52,13 +52,13 @@ io.on('connection', (socket) => {
     });
 });
 
+
 app.post('/crearSala', async (req, res) => { 
 	const { codigo, cantidad_personas } = req.body;
 	try {
 		const results = await db.query(
 			`INSERT INTO salas (codigo, cantidad_personas) VALUES ('${codigo}', ${cantidad_personas})`
 		);
-		res.json(results);
 	} catch (err) {
 		res.status(500).send(err);
 	}

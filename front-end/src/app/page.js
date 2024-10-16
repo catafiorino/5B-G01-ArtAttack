@@ -27,8 +27,7 @@ const GameRoom = () => {
     event.preventDefault();
     if (validCodes.includes(gameCode)) {
       console.log('Unido a la sala con código:', gameCode);
-      <Link href="/otra-pagina">
-      </Link>
+      window.href="/otra-pagina">
       setError('');
     } else {
       setError('Código del juego no válido.');
@@ -65,8 +64,7 @@ const GameRoom = () => {
         setMaxPlayers('');
         document.getElementById('createGameModal').close(); 
         setError('');
-        <Link href="/otra-pagina">
-        </Link>
+        window.href="/otra-pagina"
       } catch (err) {
         setError('Error al crear la sala.');
         console.error('Error:', err);

@@ -8,7 +8,7 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 18, 22, 26;
   --background-end-rgb: 28, 34, 40;
-  
+
   --sidebar-bg: #121b22; 
   --chat-bg: #0b141a; 
   --my-message-bg: #166636;
@@ -16,6 +16,7 @@
   --header-bg: #166636; 
   --header-text-color: #ffffff; 
   --input-bg: #0b141a; 
+  --canvas-bg: #1e1e1e; /* Fondo del canvas */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,6 +36,11 @@ html, body {
   overflow-x: hidden;
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-end-rgb));
+}
+
+canvas {
+  background-color: var(--canvas-bg); /* Color de fondo del canvas */
+  border-radius: var(--border-radius);
 }
 
 .all-chats {
@@ -73,11 +79,9 @@ html, body {
   transition: background-color 0.3s; 
 }
 
-
 .chatslist button:hover {
   background-color: #128C7E; 
 }
-
 
 .creargrupo {
   background-color: #ffffff; 
@@ -94,14 +98,12 @@ html, body {
   z-index: 1000; 
 }
 
-
 .creargrupo h3 {
   font-size: 20px; 
   margin: 0 0 15px 0; 
   color: #333; 
   font-weight: 500; 
 }
-
 
 .creargrupo input[type="text"] {
   width: 100%; 
@@ -110,7 +112,6 @@ html, body {
   border-radius: 5px; 
   margin-bottom: 15px; 
   font-size: 16px; 
-
 }
 
 .creargrupo .contact-list {
@@ -118,7 +119,6 @@ html, body {
   overflow-y: auto; 
   margin-bottom: 15px; 
 }
-
 
 .creargrupo .contact-list .contact-item {
   display: flex; 
@@ -129,12 +129,10 @@ html, body {
   transition: background-color 0.3s; 
 }
 
-
 .creargrupo .contact-list .contact-item.selected {
   background-color: #e8f5e9; 
   border-left: 4px solid #25D366; 
 }
-
 
 .creargrupo .contact-list .contact-item .contact-name {
   font-size: 16px; 
@@ -155,8 +153,7 @@ html, body {
   font-size: 16px; 
   cursor: pointer;
   transition: background-color 0.3s; 
-  width: 100%; 
-    display: inline-block; 
+  display: inline-block; 
   margin: 10px auto; 
   width: auto; 
 }
@@ -182,10 +179,6 @@ html, body {
 .creargrupo .btn-cancel:hover {
   background-color: #c62828; 
 }
-
-
-
-
 
 .selectedchat {
   flex: 1;
@@ -216,7 +209,7 @@ html, body {
   font-size: 19px; 
 }
 
-.chat-details{
+.chat-details {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -258,7 +251,6 @@ html, body {
   height: 10%;
   align-items: center;
   padding: 8px;
-
 }
 
 .chat-input input {
@@ -269,7 +261,6 @@ html, body {
   margin-right: 8px;
   background-color: #ffffff;
   color: #000000;
-  
 }
 
 .chat-input button {

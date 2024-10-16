@@ -45,6 +45,12 @@ app.get('/entrarSala', async (req, res) => {
 	}
 });
 
+io.on('connection', (socket) => {
+    socket.on('unirseSala', (codigoSala) => {
+        socket.join(codigoSala);
+        socket.to(codigoSala).emit('nuevoUsuario', 'Un nuevo usuario se ha unido a la sala: ' + codigoSala);
+    });
+});
 
 app.post('/crearSala', async (req, res) => { 
 	const { codigo, cantidad_personas } = req.body;
@@ -137,7 +143,7 @@ app.delete('/login', (req, res) => {
 	res.send(null);
 });
 
-io.on("connection", (socket) => {
+io.on("a", (socket) => {
 	const req = socket.request;
 
 	socket.on('joinRoom', data => {

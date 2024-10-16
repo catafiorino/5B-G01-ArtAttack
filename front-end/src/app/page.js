@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.css'; 
+import Link from 'next/link';
 
 const GameRoom = () => {
   const [gameCode, setGameCode] = useState('');
@@ -26,6 +27,8 @@ const GameRoom = () => {
     event.preventDefault();
     if (validCodes.includes(gameCode)) {
       console.log('Unido a la sala con código:', gameCode);
+      <Link href="/otra-pagina">
+      </Link>
       setError('');
     } else {
       setError('Código del juego no válido.');
@@ -62,6 +65,8 @@ const GameRoom = () => {
         setMaxPlayers('');
         document.getElementById('createGameModal').close(); 
         setError('');
+        <Link href="/otra-pagina">
+        </Link>
       } catch (err) {
         setError('Error al crear la sala.');
         console.error('Error:', err);

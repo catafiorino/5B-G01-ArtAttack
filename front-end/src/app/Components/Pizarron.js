@@ -10,6 +10,7 @@ export default function PizarronCanvas() {
     const [accionesDibujar, setAccionesDibujar] = useState([]);
     const [currentPath, setCurrentPath] = useState([]);
     const [currentStyle, setCurrentStyle] = useState({ color: "black", lineWidth: 3 });
+    const [isEraser, setIsEraser] = useState(false); // Estado para la goma de borrar
 
     useEffect(() => {
         if (canvasRef.current) {
@@ -33,8 +34,9 @@ export default function PizarronCanvas() {
     const dibuja = (e) => {
         if (!dibujar) return;
         if (context) {
-            context.strokeStyle = currentStyle.color;
-            context.lineWidth = currentStyle.lineWidth;
+            // Cambia el color a blanco si se usa la goma
+            context.strokeStyle = isEraser ? "white" : currentStyle.color;
+            context.lineWidth = isEraser ? lineWidth * 2 : currentStyle.lineWidth; // Goma más ancha
             context.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
             context.stroke();
             setCurrentPath([...currentPath, { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }]);
@@ -92,6 +94,8 @@ export default function PizarronCanvas() {
         });
     };
 
+    const colores = ["black", "red", "green", "blue", "yellow", "purple", "orange", "pink"];
+
     return (
         <div>
             <canvas
@@ -103,10 +107,23 @@ export default function PizarronCanvas() {
                 className="border border-gray"
             />
             <div className="flex my-4">
+                {colores.map(color => (
+                    <button
+                        key={color}
+                        onClick={() => {
+                            setIsEraser(false); // Desactiva la goma al seleccionar un color
+                            changeColor(color);
+                        }}
+                        style={{ backgroundColor: color, width: '40px', height: '40px', marginRight: '5px', border: 'none', cursor: 'pointer' }}
+                    />
+                ))}
                 <input
                     type="color"
                     value={currentColor}
-                    onChange={(e) => changeColor(e.target.value)}
+                    onChange={(e) => {
+                        setIsEraser(false); // Desactiva la goma al seleccionar un color
+                        changeColor(e.target.value);
+                    }}
                     className="border border-gray-300 rounded"
                 />
                 <div className="flex-grow" />
@@ -117,6 +134,24 @@ export default function PizarronCanvas() {
                     value={lineWidth}
                     onChange={(e) => changeWidth(e.target.value)}
                 />
+                <button
+                    onClick={() => {
+                        setIsEraser(!isEraser); // Alterna el estado de la goma
+                        if (!isEraser) {
+                            setCurrentColor("white"); // Cambia el color a blanco si se activa la goma
+                        }
+                    }}
+                    style={{
+                        backgroundColor: isEraser ? "gray" : "lightgray",
+                        color: "black",
+                        padding: '10px',
+                        marginLeft: '10px',
+                        border: 'none',
+                        cursor: 'pointer'
+                    }}
+                >
+                    {isEraser ? "Usar lápiz" : "Usar goma"}
+                </button>
             </div>
             <div className="flex justify-center my-4">
                 <button className="bg-blue-500 text-white px-4 py-2 mr-2" onClick={undoDibujo}>

@@ -5,23 +5,23 @@
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 18, 22, 26;
-  --background-end-rgb: 28, 34, 40;
+  --foreground-rgb: 0, 0, 0; /* Texto negro */
+  --background-start-rgb: 255, 255, 255; /* Fondo blanco */
+  --background-end-rgb: 230, 230, 230; /* Fondo gris claro */
 
-  --sidebar-bg: #121b22; 
-  --chat-bg: #0b141a; 
-  --my-message-bg: #166636;
-  --their-message-bg: #727272; 
-  --header-bg: #166636; 
+  --sidebar-bg: #f1f1f1; 
+  --chat-bg: #ffffff; 
+  --my-message-bg: #b3e5fc; /* Azul claro */
+  --their-message-bg: #c8e6c9; /* Verde claro */
+  --header-bg: #2196F3; /* Azul */
   --header-text-color: #ffffff; 
-  --input-bg: #0b141a; 
-  --canvas-bg: #1e1e1e; /* Fondo del canvas */
+  --input-bg: #ffffff; 
+  --canvas-bg: #f5f5f5; /* Fondo del canvas */
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   html {
-    color-scheme: light;
+    color-scheme: dark;
   }
 }
 
@@ -32,20 +32,28 @@
 }
 
 html, body {
-  max-width: 100vw;
+  width: 100%;
+  height: 100%;
   overflow-x: hidden;
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-end-rgb));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 canvas {
-  background-color: var(--canvas-bg); /* Color de fondo del canvas */
+  background-color: var(--canvas-bg);
   border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
 }
 
 .all-chats {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 50px); /* Ajusta la altura */
+  width: 100%;
 }
 
 .chatslist {
@@ -55,6 +63,7 @@ canvas {
   color: rgb(var(--foreground-rgb));
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .chatslist h2 {
@@ -62,6 +71,8 @@ canvas {
   padding: 16px; 
   background-color: var(--header-bg);
   margin: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .chatslist button {
@@ -80,7 +91,7 @@ canvas {
 }
 
 .chatslist button:hover {
-  background-color: #128C7E; 
+  background-color: #1976D2; /* Azul más oscuro al pasar el ratón */
 }
 
 .creargrupo {
@@ -96,6 +107,7 @@ canvas {
   max-width: 500px; 
   max-height: 90vh;
   z-index: 1000; 
+  text-align: center; 
 }
 
 .creargrupo h3 {
@@ -130,8 +142,8 @@ canvas {
 }
 
 .creargrupo .contact-list .contact-item.selected {
-  background-color: #e8f5e9; 
-  border-left: 4px solid #25D366; 
+  background-color: #e1f5fe; 
+  border-left: 4px solid #2196F3; 
 }
 
 .creargrupo .contact-list .contact-item .contact-name {
@@ -140,12 +152,9 @@ canvas {
   margin-left: 10px; 
 }
 
-.creargrupo {
-  text-align: center;
-}
-
-.creargrupo .btn-create-group {
-  background-color: #25D366; 
+.creargrupo .btn-create-group, 
+.creargrupo .btn-cancel {
+  background-color: #2196F3; 
   color: white; 
   border: none; 
   border-radius: 5px; 
@@ -153,27 +162,16 @@ canvas {
   font-size: 16px; 
   cursor: pointer;
   transition: background-color 0.3s; 
-  display: inline-block; 
-  margin: 10px auto; 
-  width: auto; 
+  width: calc(50% - 10px); 
+  margin: 10px; 
 }
 
 .creargrupo .btn-create-group:hover {
-  background-color: #128C7E; 
+  background-color: #1976D2; 
 }
 
 .creargrupo .btn-cancel {
   background-color: #f44336; 
-  color: white; 
-  border: none; 
-  border-radius: 5px; 
-  padding: 10px 15px; 
-  font-size: 16px; 
-  cursor: pointer;
-  transition: background-color 0.3s; 
-  display: inline-block; 
-  margin: 10px auto; 
-  width: auto;
 }
 
 .creargrupo .btn-cancel:hover {
@@ -195,6 +193,7 @@ canvas {
   background-color: var(--header-bg);
   padding: 16px; 
   color: var(--header-text-color);
+  width: 100%; 
 }
 
 .profile-pic {
@@ -237,13 +236,13 @@ canvas {
 .my-message {
   background-color: var(--my-message-bg);
   align-self: flex-end;
-  color: #ffffff;
+  color: #000000; /* Texto negro */
 }
 
 .their-message {
   background-color: var(--their-message-bg);
   align-self: flex-start;
-  color: #ffffff;
+  color: #000000; /* Texto negro */
 }
 
 .chat-input {
@@ -251,6 +250,7 @@ canvas {
   height: 10%;
   align-items: center;
   padding: 8px;
+  width: 100%; /* Asegura que ocupe todo el ancho */
 }
 
 .chat-input input {
@@ -284,6 +284,7 @@ button {
   padding: 8px 16px;
   cursor: pointer;
   margin: 16px; 
+  width: calc(100% - 32px); /* Ajusta para el margen */
 }
 
 button:hover {

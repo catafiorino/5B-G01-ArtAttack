@@ -5,6 +5,7 @@
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
+  /* Colores para el modo claro */
   --foreground-rgb: 0, 0, 0; /* Texto negro */
   --background-start-rgb: 255, 255, 255; /* Fondo blanco */
   --background-end-rgb: 230, 230, 230; /* Fondo gris claro */
@@ -19,9 +20,21 @@
   --canvas-bg: #f5f5f5; /* Fondo del canvas */
 }
 
-@media (prefers-color-scheme: light) {
-  html {
-    color-scheme: dark;
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Colores para el modo oscuro */
+    --foreground-rgb: 255, 255, 255; /* Texto blanco */
+    --background-start-rgb: 18, 22, 26; /* Fondo oscuro */
+    --background-end-rgb: 28, 34, 40; 
+    
+    --sidebar-bg: #333; 
+    --chat-bg: #1e1e1e; 
+    --my-message-bg: #1a73e8; 
+    --their-message-bg: #3a3a3a; 
+    --header-bg: #2196F3; 
+    --header-text-color: #ffffff; 
+    --input-bg: #444; 
+    --canvas-bg: #222; 
   }
 }
 

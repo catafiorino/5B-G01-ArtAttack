@@ -8,3 +8,4 @@ import PizarronCanvas from "../Components/Pizarron"
         </main>
     )
  }
+ 
